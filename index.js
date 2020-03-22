@@ -3,6 +3,9 @@ const fs = require('fs');
 const util = require('util');
 const rite = util.promisify(fs.writeFile);
 const axios = require("axios");
+var pdf = require('html-pdf');
+var text = fs.readFileSync('./index.html', 'utf8');
+var options = { format: 'Letter' };
 
 function ask() {
     return inquirer.prompt([
@@ -58,9 +61,14 @@ function gen(res) {
         return rite("index.html", html);
               })
               .then(function() {
+                pdf.create(text, options).toFile('./html.pdf', function(err, res) {
+                  if (err) return console.log(err);
+                  console.log(res);
+                });
                 console.log("Successfully wrote to index.html");
               })
                 .catch(function(err) {
                 console.log(err);
-                });
+                })
+                
                   })
